@@ -36,11 +36,25 @@ client.on("message", async message => {
 })
 
 client.on('messageReactionAdd', (reaction, user) => {
-    const category = "961341239318413402";
+    if (user.bot) { return; }   
+    
+    const category = "961352646885769276";
 
-    if (user.bot) { return; }
     if (reaction.message.channel.parent == category) {
-        reaction.message.channel.delete();
+        
+        
+        
+        
+        reaction.message.channel.messages.fetch({ after: 1, limit: 1 }).then(messages => {
+            let ping = messages.first().content;
+            if(ping.includes("<") && ping.includes(">") && ping.includes("@")) {
+                ping.replace("<", '').replace("@",1")
+            }
+            
+            reaction.message.channel.delete();
+            
+        })
+        .catch(console.error);
         return;
     }
 
@@ -60,19 +74,14 @@ client.on('messageReactionAdd', (reaction, user) => {
         ]
     }).then(channel => {
         channel.setParent(category);
-
-        const embed = new Discord.MessageEmbed()
+            const embed = new Discord.MessageEmbed()
             .setColor('#0099ff')
             .setTitle('Moderator Application')
-            .setDescription('Click on the emoji to close the moderator application!');
-
-        channel.send("<@" + user.id + ">");
-
-
+            .setDescription('Introduce your self!\n1. Why do you want to become a staff member?\n2. Do you have any prior moderation/management experience?\n3. How often are you available?\n  \nyou can wait for our stuff the check your application\n\n\nClick on the emoji to close the moderator application!')
+channel.send("<@" + user.id + ">");
         channel.send(embed).then(msg => {
             msg.react("❌");
         });
-      channel.send('Write your application here and the staff will read it and decide based on what you write!\n Recommended:\n 1. Tell us a bit about yourself!\n 2. Why do you want to become a staff member?\n3. Do you have any prior moderation/management experience?\n 4. How often are you available?')
     });
 
 });
