@@ -31,12 +31,19 @@ client.on("message", async message =>
 })
 
 client.on('messageReactionAdd', (reaction, user) => {
-        reaction.message.channel.guild.channels.create(user.name, {
+        reaction.message.channel.guild.channels.create("#" + user.name, {
 	    type: 'GUILD_TEXT',
-        permissionOverwrites: [{
-        	id: reaction.message.channel.guild.roles.everyone,
-            deny: ['VIEW_CHANNEL'],
-	    }]
+        permissionOverwrites: [
+            {
+        	    id: reaction.message.channel.guild.roles.everyone,
+                allow: ['VIEW_CHANNEL'],
+	        },
+            
+            {
+        	    id: reaction.message.channel.guild.roles.everyone,
+                deny: ['VIEW_CHANNEL'],
+	        }
+        ]
     });
 });
 
