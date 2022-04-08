@@ -40,19 +40,16 @@ client.on('messageReactionAdd', (reaction, user) => {
     
     const category = "961352646885769276";
 
-    if (reaction.message.channel.parent == category) {
-        
-        
-        
-        
+    if (reaction.message.channel.parent == category) { 
         reaction.message.channel.messages.fetch({ after: 1, limit: 1 }).then(messages => {
             let ping = messages.first().content;
             if(ping.includes("<") && ping.includes(">") && ping.includes("@")) {
-                ping.replace("<", '').replace("@",1")
+                let id = ping.replace("<", '').replace("@","").replace(">","");
+                if(id == user.id || IsAdmin(id))
+                {
+                    reaction.message.channel.delete();
+                }
             }
-            
-            reaction.message.channel.delete();
-            
         })
         .catch(console.error);
         return;
@@ -98,5 +95,3 @@ function IsAdmin(id) {
 
 keepAlive();
 client.login(Token);
-
-//GG
